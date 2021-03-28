@@ -1,0 +1,11 @@
+# git
+.git/
+.gitignore
+LICENSE
+README.md
+
+# python
+venv/
+
+# docker
+docker/build.sh
