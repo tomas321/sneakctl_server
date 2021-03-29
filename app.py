@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
-from flask import Flask
+from json import dumps
+from sneakctl_server.flaskr import create_app
 
-from sneakctl_server.settings.base import BaseConfig
-
-app = Flask(__name__)
-app_config = BaseConfig()
+app = create_app()
 
 
 @app.route('/config')
 def config():
-    return app_config.get_config()
+    return dumps(app.config, default=str)
 
 
 if __name__ == '__main__':
