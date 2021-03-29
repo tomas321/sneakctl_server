@@ -8,4 +8,4 @@ class ProdConfig(BaseConfig):
         self.config['DEBUG'] = False
         self.config['CONFIG_DIR'] = CONFIG_DIR_PROD
 
-        full_config = self._load_config(CONFIG_DIR_PROD)
+        self._load_config(CONFIG_DIR_PROD)

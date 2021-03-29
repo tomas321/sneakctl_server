@@ -8,4 +8,4 @@ class DevConfig(BaseConfig):
         self.config['DEBUG'] = True
         self.config['CONFIG_DIR'] = CONFIG_DIR_DEV
 
-        full_config = self._load_config(CONFIG_DIR_DEV)
+        self._load_config(CONFIG_DIR_DEV)

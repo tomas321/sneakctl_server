@@ -1,2 +1,11 @@
 ---
 # example sneakctl server config
+
+redis:
+  host: redis
+  port: 6379
+  db: 0
+  # user: redis
+  # password: r3di5
+
+debug: false

@@ -26,6 +26,9 @@ pushd $DEST || exit 1
 ./test-docker.sh ssh-config-host
 ```
 
+## Configuration
+- refer to the [example config](./config/etc/sneakctl_server/config_example.yml)
+
 ## License
 
 MIT
