@@ -1,6 +1,8 @@
 #!/bin/bash
 
+# MAIN VARS
 project_dir="sneakctl_server"
+network_name="sneakctl"
 
 [ $# -ge 1 ] || echo "usage: SSH_HOST"
 
@@ -14,6 +16,6 @@ ENDSSH
 
 rsync --progress -ar "." "$dest"
 
-ssh $ssh_host DIR=$project_dir VERSION=$version "bash -s"  <<-"ENDSSH"
-    cd $DIR && ./docker/build.sh "$VERSION"
+ssh $ssh_host DIR=$project_dir VERSION=$version NET=$network_name "bash -s" <<-"ENDSSH"
+    cd $DIR && ./docker/docker-setup.sh $NET && ./docker/build.sh "$VERSION" "$NET"
 ENDSSH
