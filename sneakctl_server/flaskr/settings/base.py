@@ -11,6 +11,8 @@ REDIS_PORT = 6379
 REDIS_USER = None
 REDIS_PWD = None
 REDIS_DB = 0
+HOST = '0.0.0.0'
+PORT = 5000
 
 
 class BaseConfig:
@@ -30,6 +32,9 @@ class BaseConfig:
 
         if 'debug' in full_config.keys():
             self.config['DEBUG'] = full_config.get('debug')
+
+        self.config['HOST'] = full_config.get('host', HOST)
+        self.config['PORT'] = full_config.get('port', PORT)
 
     def get_config(self) -> dict:
         return self.config if self.config else None

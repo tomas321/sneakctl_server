@@ -11,4 +11,4 @@ def config():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host=app.config.get('HOST'), port=app.config.get('PORT'))

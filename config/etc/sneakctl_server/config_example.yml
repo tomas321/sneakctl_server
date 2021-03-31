@@ -9,3 +9,7 @@ redis:
   # password: r3di5
 
 debug: false
+
+# flask app listen host and port
+host: 0.0.0.0
+port: 5000

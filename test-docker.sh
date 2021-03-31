@@ -4,7 +4,8 @@
 project_dir="sneakctl_server"
 network_name="sneakctl"
 
-[ $# -ge 1 ] || echo "usage: SSH_HOST"
+[ $# -lt 1 ] && echo "usage: $0 SSH_HOST" && exit 1
+[ "$1" == "--help" ] && echo "usage: $0 SSH_HOST" && exit 0
 
 ssh_host="$1"
 dest="$ssh_host:$project_dir"
