@@ -1,7 +1,9 @@
 from flask import Flask
 
 from sneakctl_server.flaskr.settings import prod as prod_cfg, dev as dev_cfg
-from sneakctl_server.flaskr import db, routes
+from sneakctl_server.flaskr import db
+from sneakctl_server.flaskr.routes.execsnoop import execsnoop_blueprint
+from sneakctl_server.flaskr.routes.db import db_blueprint
 
 
 def create_app():
@@ -22,7 +24,8 @@ def create_app():
     # except OSError:
     #     pass
 
-    app.register_blueprint(routes.db_blueprint)
+    app.register_blueprint(db_blueprint)
+    app.register_blueprint(execsnoop_blueprint)
 
     db.init_app(app)
 

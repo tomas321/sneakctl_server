@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 ### Added
+- execsnoop related routes
+  - get process status utilizing pgrep and psutil
+  
 - redis integration
 - docker testing with redis container
 - configuration pytests
