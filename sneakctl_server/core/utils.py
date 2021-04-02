@@ -1,38 +1,75 @@
+import sys
+from collections import namedtuple
 import os
 import psutil
+from psutil._common import addr, pconn
+from psutil._pslinux import pcputimes
 
 
-full_process_attributes = [
-    'cmdline',
-    'connections',  # requires additional parsing
-    'cpu_num',
-    'cpu_percent',
-    'cpu_times',  # requires additional parsing
-    'create_time',
-    'cwd',
-    'environ',
-    'exe',
-    'memory_percent',
-    'name',
-    'num_fds',
-    'num_threads',
-    'open_files',
-    'pid',
-    'ppid',
-    'status',
-    'username'
-]
-process_attributes = [
-    'cmdline',
-    'pid',
-    'ppid',
-    'username',
-    'cpu_percent',
-    'memory_percent',
-    'exe',
-    'status',
-    'create_time'
-]
+class ProcessAttributes:
+    @staticmethod
+    def get_all_attribute_names():
+        return [key for key, value in ATTRIBUTES.items()]
+
+    @staticmethod
+    def get_attribute_names():
+        return [key for key, value in ATTRIBUTES.items() if not value.verbose]
+
+    @staticmethod
+    def parse_attributes(attributes: dict):
+        attrs = dict()
+        for key, value in attributes.items():
+            if ATTRIBUTES[key].func:
+                # parsing function is present
+                attrs[key] = ATTRIBUTES[key].func(value)
+            else:
+                attrs[key] = value
+
+        return attrs
+
+    @staticmethod
+    def parse_connections(conns):
+        if not conns:
+            return conns
+
+        connections = []
+        for conn in conns:
+            laddr = raddr = None
+            if conn[3]:
+                laddr = dict(addr(*conn[3])._asdict())
+            if conn[4]:
+                raddr = dict(addr(*conn[4])._asdict())
+
+            connection_dict = dict(pconn(conn[0], conn[1], conn[2], laddr, raddr, conn[5])._asdict())
+            print(connection_dict, file=sys.stderr)
+
+            connections.append(connection_dict)
+            
+        return connections
+
+
+ATTR = namedtuple('ATTR', ['verbose', 'func'])
+ATTRIBUTES = {
+    # (ATTR, VERBOSE, [parsing_func])
+    'cmdline': ATTR(False, lambda x: ' '.join(x)),
+    'connections': ATTR(True, ProcessAttributes.parse_connections), # requires additional parsing
+    'cpu_num': ATTR(True, None),
+    'cpu_percent': ATTR(False, None),
+    'cpu_times': ATTR(True, lambda x: dict(pcputimes(*x)._asdict())), # requires additional parsing
+    'create_time': ATTR(False, None),
+    'cwd': ATTR(True, None),
+    'environ': ATTR(True, None),
+    'exe': ATTR(False, None),
+    'memory_percent': ATTR(False, None),
+    'name': ATTR(True, None),
+    'num_fds': ATTR(True, None),
+    'num_threads': ATTR(True, None),
+    'open_files': ATTR(True, None),
+    'pid': ATTR(False, None),
+    'ppid': ATTR(False, None),
+    'status': ATTR(False, None),
+    'username': ATTR(False, None)
+}
 
 
 def pgrep(proc_pattern: str):
@@ -49,7 +86,9 @@ def process_info(pid: int, full: bool = False):
     if type(pid) is not int:
         pid = int(pid)
     process = psutil.Process(pid)
-    return process.as_dict(attrs=full_process_attributes) if full else process.as_dict(attrs=process_attributes)
+    process_info_dict = process.as_dict(attrs=ProcessAttributes.get_all_attribute_names()) if full else process.as_dict(
+        attrs=ProcessAttributes.get_attribute_names())
+    return ProcessAttributes.parse_attributes(process_info_dict)
 
 
 def str_to_bool(s: str):
