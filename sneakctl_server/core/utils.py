@@ -72,6 +72,15 @@ ATTRIBUTES = {
 }
 
 
+def get_all_instances(pname: str, full: bool = False):
+    pids = pgrep(pname)
+    processes = []
+    for pid in pids:
+        processes.append(process_info(int(pid), full))
+
+    return processes
+
+
 def pgrep(proc_pattern: str):
     """run 'pgrep' for given pattern of process and return
     a list of processes matching **proc_pattern** pattern
@@ -83,8 +92,6 @@ def pgrep(proc_pattern: str):
 
 
 def process_info(pid: int, full: bool = False):
-    if type(pid) is not int:
-        pid = int(pid)
     process = psutil.Process(pid)
     process_info_dict = process.as_dict(attrs=ProcessAttributes.get_all_attribute_names()) if full else process.as_dict(
         attrs=ProcessAttributes.get_attribute_names())

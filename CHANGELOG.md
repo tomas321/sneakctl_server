@@ -6,6 +6,9 @@
   - get process status utilizing pgrep and psutil
   - load all execsnoop process to objects
 
+- process related routes
+  - get arbitrery process status utilizing pgrep and psutil
+
 - redis integration
 - docker testing with redis container
 - pytests

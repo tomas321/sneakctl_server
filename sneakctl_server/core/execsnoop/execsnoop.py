@@ -1,16 +1,7 @@
 from datetime import datetime
 
-from sneakctl_server.core.utils import pgrep, process_info
+from sneakctl_server.core.utils import get_all_instances
 from sneakctl_server.core.execsnoop.cmd import execsnoop_options
-
-
-def get_all_instances(pname: str = "execsnoop", full: bool = False):
-    pids = pgrep(pname)
-    processes = []
-    for pid in pids:
-        processes.append(process_info(pid, full))
-
-    return processes
 
 
 class ExecsnoopInstance:
@@ -55,7 +46,7 @@ class Execsnoop:
         self.__load_instances()
 
     def __load_instances(self):
-        for instance in get_all_instances():
+        for instance in get_all_instances('execsnoop'):
             self.instances.append(ExecsnoopInstance(instance))
 
     def to_json(self):
