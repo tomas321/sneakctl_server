@@ -7,7 +7,7 @@ from sneakctl_server.flaskr.settings.dev import DevConfig
 from sneakctl_server.flaskr.settings.prod import ProdConfig
 
 EXPECTED_KEYS_SET = {
-    'REDIS_HOST', 'REDIS_PORT', 'REDIS_USER', 'REDIS_PWD', 'REDIS_DB', 'FLASK_ENV', 'DEBUG', 'CONFIG_DIR', 'HOST', 'PORT'
+    'REDIS_HOST', 'REDIS_PORT', 'REDIS_USER', 'REDIS_PWD', 'REDIS_DB', 'FLASK_ENV', 'CONFIG_DIR', 'HOST', 'PORT'
 }
 
 
@@ -25,13 +25,6 @@ class TestBaseConfig(unittest.TestCase):
             cfg = ProdConfig()
 
             self.assertEqual(cfg.get_config()['CONFIG_DIR'], CONFIG_DIR_PROD)
-
-    def test_debug_config_gets_overriden(self):
-        with patch('sneakctl_server.flaskr.settings.base.open', create=True) as open_mock:
-            open_mock.return_value.__enter__.return_value = BytesIO(bytes('debug: true', encoding='utf-8'))
-            cfg = ProdConfig()
-
-            self.assertEqual(cfg.get_config()['DEBUG'], True)
 
     @patch('sneakctl_server.flaskr.settings.base.yaml.full_load')
     def test_config_has_all_required_keys_when_config_is_empty(self, yaml_load_mock):
@@ -51,8 +44,7 @@ class TestBaseConfig(unittest.TestCase):
                 'user': 'redis',
                 'password': 'redis',
                 'db': 1
-            },
-            'debug': True,
+            }
         }
         with patch('sneakctl_server.flaskr.settings.base.open', create=True) as open_mock:
             open_mock.return_value.__enter__.return_value = BytesIO(bytes('', encoding='utf-8'))

@@ -1,6 +1,12 @@
 # Changelog
 
 ## [Unreleased]
+### Modified
+- fix configure.sh script for both dev and prod environments
+  - also modify and work with config.yml file instead of config_example.yml, because config.yml is in gitignore
+
+### Removed
+- configuration of the debug parameter
 
 ## [0.0.1]
 ### Added

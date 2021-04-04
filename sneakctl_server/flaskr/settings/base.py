@@ -30,9 +30,6 @@ class BaseConfig:
         self.config['REDIS_PWD'] = full_config.get('redis', {}).get('password', REDIS_PWD)
         self.config['REDIS_DB'] = full_config.get('redis', {}).get('db', REDIS_DB)
 
-        if 'debug' in full_config.keys():
-            self.config['DEBUG'] = full_config.get('debug')
-
         self.config['HOST'] = full_config.get('host', HOST)
         self.config['PORT'] = full_config.get('port', PORT)
 

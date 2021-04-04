@@ -5,7 +5,6 @@ class DevConfig(BaseConfig):
     def __init__(self):
         super().__init__()
 
-        self.config['DEBUG'] = True
         self.config['CONFIG_DIR'] = CONFIG_DIR_DEV
 
         self._load_config(CONFIG_DIR_DEV)
