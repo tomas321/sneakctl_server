@@ -7,7 +7,7 @@ from sneakctl_server.flaskr.settings.dev import DevConfig
 from sneakctl_server.flaskr.settings.prod import ProdConfig
 
 EXPECTED_KEYS_SET = {
-    'REDIS_HOST', 'REDIS_PORT', 'REDIS_USER', 'REDIS_PWD', 'REDIS_DB', 'FLASK_ENV', 'DEBUG', 'CONFIG_DIR'
+    'REDIS_HOST', 'REDIS_PORT', 'REDIS_USER', 'REDIS_PWD', 'REDIS_DB', 'FLASK_ENV', 'DEBUG', 'CONFIG_DIR', 'HOST', 'PORT'
 }
 
 
