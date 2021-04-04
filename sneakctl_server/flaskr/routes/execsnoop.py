@@ -33,7 +33,10 @@ def status():
     :return: list of process_info dicts
     """
     status_response = dict(response={}, count=0)
-    status_response['response']['process_instances'] = execsnoop.get_all_instances()
+    if execsnoop.execsnoop_adapter:
+        status_response['response']['process_instances'] = execsnoop.execsnoop_adapter.to_json()
+    else:
+        status_response['response']['process_instances'] = []
     status_response['count'] = len(status_response['response']['process_instances'])
 
     return status_response

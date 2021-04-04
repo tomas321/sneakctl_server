@@ -19,7 +19,9 @@ class ExecsnoopInstance:
 
         :param process_info: psutil dict info of a process
         """
+        self.attributes = []
         for k, v in process.items():
+            self.attributes.append(k)
             if k == 'create_time':
                 setattr(self, k, datetime.fromtimestamp(v))
             else:
@@ -39,6 +41,13 @@ class ExecsnoopInstance:
                 else:
                     setattr(self, option_name, True)
 
+    def to_json(self):
+        json_attrs = {}
+        for attr in self.attributes:
+            json_attrs[attr] = getattr(self, attr)
+
+        return json_attrs
+
 
 class Execsnoop:
     def __init__(self):
@@ -48,6 +57,13 @@ class Execsnoop:
     def __load_instances(self):
         for instance in get_all_instances():
             self.instances.append(ExecsnoopInstance(instance))
+
+    def to_json(self):
+        json_instances = []
+        for i in self.instances:
+            json_instances.append(i.to_json())
+
+        return json_instances
 
 
 execsnoop_adapter = None
