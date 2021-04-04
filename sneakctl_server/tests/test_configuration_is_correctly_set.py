@@ -1,27 +1,66 @@
 from io import BytesIO
-import os
 import unittest
 from unittest.mock import patch
 
-from sneakctl_server.settings.base import BaseConfig, CONFIG_DIR_DEV, CONFIG_DIR_PROD
+from sneakctl_server.flaskr.settings.base import CONFIG_DIR_PROD, CONFIG_DIR_DEV
+from sneakctl_server.flaskr.settings.dev import DevConfig
+from sneakctl_server.flaskr.settings.prod import ProdConfig
+
+EXPECTED_KEYS_SET = {
+    'REDIS_HOST', 'REDIS_PORT', 'REDIS_USER', 'REDIS_PWD', 'REDIS_DB', 'FLASK_ENV', 'DEBUG', 'CONFIG_DIR', 'HOST', 'PORT'
+}
 
 
 class TestBaseConfig(unittest.TestCase):
-    def setUp(self) -> None:
-        self.env_prod = patch.dict('os.environ', {'FLASK_ENV': 'production'})
-        self.env_dev = patch.dict('os.environ', {'FLASK_ENV': 'development'})
-
     def test_configuration_dir_is_correct_for_dev(self):
-        with self.env_dev:
-            config = BaseConfig()
-            self.assertEqual(config.CONFIG_DIR, CONFIG_DIR_DEV)
+        with patch('sneakctl_server.flaskr.settings.base.open', create=True) as open_mock:
+            open_mock.return_value.__enter__.return_value = BytesIO(bytes('testing: aa', encoding='utf-8'))
+            cfg = DevConfig()
 
-    @unittest.mock.patch('sneakctl_server.settings.base.open')  # have to mock non-existing prod config
-    def test_configuration_dir_is_correct_for_prod(self, open_mock):
-        open_mock.return_value.__enter__.return_value = BytesIO(bytes('testing: aa', encoding='utf-8'))
-        with self.env_prod:
-            config = BaseConfig()
-            self.assertEqual(config.CONFIG_DIR, CONFIG_DIR_PROD)
+            self.assertEqual(cfg.get_config()['CONFIG_DIR'], CONFIG_DIR_DEV)
+
+    def test_configuration_dir_is_correct_for_prod(self):
+        with patch('sneakctl_server.flaskr.settings.base.open', create=True) as open_mock:
+            open_mock.return_value.__enter__.return_value = BytesIO(bytes('testing: aa', encoding='utf-8'))
+            cfg = ProdConfig()
+
+            self.assertEqual(cfg.get_config()['CONFIG_DIR'], CONFIG_DIR_PROD)
+
+    def test_debug_config_gets_overriden(self):
+        with patch('sneakctl_server.flaskr.settings.base.open', create=True) as open_mock:
+            open_mock.return_value.__enter__.return_value = BytesIO(bytes('debug: true', encoding='utf-8'))
+            cfg = ProdConfig()
+
+            self.assertEqual(cfg.get_config()['DEBUG'], True)
+
+    @patch('sneakctl_server.flaskr.settings.base.yaml.full_load')
+    def test_config_has_all_required_keys_when_config_is_empty(self, yaml_load_mock):
+        yaml_load_mock.return_value = dict()
+        with patch('sneakctl_server.flaskr.settings.base.open', create=True) as open_mock:
+            open_mock.return_value.__enter__.return_value = BytesIO(bytes('', encoding='utf-8'))
+            cfg = DevConfig()
+
+            self.assertSetEqual(set(cfg.get_config().keys()), EXPECTED_KEYS_SET)
+
+    @patch('sneakctl_server.flaskr.settings.base.yaml.full_load')
+    def test_config_has_all_required_keys(self, yaml_load_mock):
+        yaml_load_mock.return_value = expected_config = {
+            'redis': {
+                'host': 'redis.local',
+                'port': 6000,
+                'user': 'redis',
+                'password': 'redis',
+                'db': 1
+            },
+            'debug': True,
+        }
+        with patch('sneakctl_server.flaskr.settings.base.open', create=True) as open_mock:
+            open_mock.return_value.__enter__.return_value = BytesIO(bytes('', encoding='utf-8'))
+            cfg = DevConfig()
+
+            app_config = cfg.get_config()
+            self.assertSetEqual(set(app_config.keys()), EXPECTED_KEYS_SET)
+            self.assertEqual(app_config['REDIS_HOST'], expected_config['redis']['host'])
 
 
 if __name__ == '__main__':

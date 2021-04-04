@@ -5,6 +5,6 @@ WORKDIR $PROJECT_DIR
 
 COPY . $PROJECT_DIR
 
-RUN bash ./configure.sh && pip3 install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 ENTRYPOINT ["./docker/docker-entrypoint.sh"]
