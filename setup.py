@@ -21,7 +21,7 @@ def requirements():
 if __name__ == '__main__':
     exec(open(path.join(path.dirname(__file__), 'sneakctl_server/version.py')).read())
     setup(
-        name='sneakctl_server',
+        name='sneakctl-server',
         version=__version__,  # noqa
         author='Tomas Bellus',
         author_email='tomas.bellus@gmail.com',
