@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.0.3]
+### Modified
+- hotfix: setup procedure in readme
+
 ## [0.0.2]
 ### Modified
 - fix configure.sh script for both dev and prod environments
@@ -27,7 +31,8 @@
 
 - serialize all existing execsnoop instances
 
-[Unreleased]: https://github.com/tomas321/sneakctl_server/compare/0.0.2...develop
+[Unreleased]: https://github.com/tomas321/sneakctl_server/compare/0.0.3...develop
+[0.0.3]: https://github.com/tomas321/sneakctl_server/compare/0.0.2...0.0.3
 [0.0.2]: https://github.com/tomas321/sneakctl_server/compare/0.0.1...0.0.2
 [0.0.1]: https://github.com/tomas321/sneakctl_server/releases/tag/0.0.1
 
