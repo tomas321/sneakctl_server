@@ -6,7 +6,7 @@
 usage="USAGE: $0 DOCKER_IMAGE_TAG DOCKER_NET_NAME"
 [[ $# -lt 2 ]] && echo "$usage" && exit 1
 
-name="sneakctl_server"
+name="sneakctl-server"
 tag="$1"
 docker_net_name="$2"
 image="$name:$tag"

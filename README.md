@@ -4,7 +4,7 @@ Server handling requests from sneakctl client tool.
 
 ## DEV setup
 - clone the repo
-- optionally create config.yml file in [config dir](config/etc/sneakctl_server), otherwise the [config example](config/etc/sneakctl_server/config_example.yml) will be used 
+- optionally create config.yml file in [config dir](config/etc/sneakctl-server), otherwise the [config example](config/etc/sneakctl-server/config_example.yml) will be used
 - run the [configure.sh](configure.sh) script
 ```bash
 DEST=/opt/sneakctl_server
@@ -36,7 +36,7 @@ pushd $DEST || exit 1
 ```
 
 ## Configuration
-- refer to the [example config](./config/etc/sneakctl_server/config_example.yml)
+- refer to the [example config](./config/etc/sneakctl-server/config_example.yml)
 
 ## License
 

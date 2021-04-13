@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [0.0.4]
+### Modified
+- package name: change underscore to colon
+  - rename config dir accordingly
+
 ## [0.0.3]
 ### Modified
 - hotfix: setup procedure in readme
@@ -31,7 +36,8 @@
 
 - serialize all existing execsnoop instances
 
-[Unreleased]: https://github.com/tomas321/sneakctl_server/compare/0.0.3...develop
+[Unreleased]: https://github.com/tomas321/sneakctl_server/compare/0.0.4...develop
+[0.0.4]: https://github.com/tomas321/sneakctl_server/compare/0.0.3...0.0.4
 [0.0.3]: https://github.com/tomas321/sneakctl_server/compare/0.0.2...0.0.3
 [0.0.2]: https://github.com/tomas321/sneakctl_server/compare/0.0.1...0.0.2
 [0.0.1]: https://github.com/tomas321/sneakctl_server/releases/tag/0.0.1

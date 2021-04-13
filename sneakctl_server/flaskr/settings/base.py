@@ -3,8 +3,8 @@ import yaml
 
 from sneakctl_server import ROOT_DIR
 
-CONFIG_DIR_PROD = '/etc/sneakctl_server'
-CONFIG_DIR_DEV = path.abspath(path.join(ROOT_DIR, '../config/etc/sneakctl_server'))
+CONFIG_DIR_PROD = '/etc/sneakctl-server'
+CONFIG_DIR_DEV = path.abspath(path.join(ROOT_DIR, '../config/etc/sneakctl-server'))
 
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
