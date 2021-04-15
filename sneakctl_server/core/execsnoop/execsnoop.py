@@ -42,12 +42,12 @@ class ExecsnoopInstance:
 
 class Execsnoop:
     def __init__(self):
-        self.instances = list()
-        self.__load_instances()
+        self.instances = set()
+        self.load_instances()
 
-    def __load_instances(self):
+    def load_instances(self):
         for instance in get_all_process_instances('execsnoop'):
-            self.instances.append(ExecsnoopInstance(instance))
+            self.instances.add(ExecsnoopInstance(instance))
 
     def to_json(self):
         json_instances = []

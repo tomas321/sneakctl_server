@@ -9,33 +9,21 @@ execsnoop_blueprint = Blueprint('execsnoop_blueprint', __name__, url_prefix='/ex
 @execsnoop_blueprint.route('/status', methods=['GET'])
 def status():
     """
-    Get status on all execsnoop processes
+    Get status on all execsnoop processes. Use URL parameter 'reload' to reload the instances and get the current
+    status. It defaults to true.
 
     :return: list of process_info dicts
     """
     status_response = dict(response={}, count=0)
-    if execsnoop.execsnoop_adapter:
-        status_response['response']['process_instances'] = execsnoop.execsnoop_adapter.to_json()
-    else:
-        status_response['response']['process_instances'] = []
+    if not execsnoop.execsnoop_adapter:
+        execsnoop.execsnoop_adapter = execsnoop.Execsnoop()
+    if str_to_bool(request.args.get('reload', default='true')):
+        execsnoop.execsnoop_adapter.load_instances()
+
+    status_response['response']['process_instances'] = execsnoop.execsnoop_adapter.to_json()
     status_response['count'] = len(status_response['response']['process_instances'])
 
     return status_response
-
-
-@execsnoop_blueprint.route('/load', methods=['POST'])
-def load():
-    """
-    Load all execsnoop current processes. Use URL parameter 'force' to reload
-
-    :return: operation status
-    """
-    rc = 200
-    if not execsnoop.execsnoop_adapter or str_to_bool(request.args.get('force', default='false')):
-        execsnoop.execsnoop_adapter = execsnoop.Execsnoop()
-        rc = 201
-
-    return {'response': 'OK'}, rc
 
 
 @execsnoop_blueprint.route('/services', methods=['GET'])

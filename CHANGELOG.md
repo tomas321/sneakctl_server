@@ -4,6 +4,9 @@
 ### Added
 - retrieve all execsnoop services
 
+### REmoved
+- execsnoop/load api call and integrated it to the execsnoop/status api call
+
 ## [0.0.4]
 ### Modified
 - package name: change underscore to colon
