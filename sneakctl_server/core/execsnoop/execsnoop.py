@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sneakctl_server.core.utils import get_all_instances
+from sneakctl_server.core.utils import get_all_process_instances
 from sneakctl_server.core.execsnoop.cmd import execsnoop_options
 
 
@@ -46,7 +46,7 @@ class Execsnoop:
         self.__load_instances()
 
     def __load_instances(self):
-        for instance in get_all_instances('execsnoop'):
+        for instance in get_all_process_instances('execsnoop'):
             self.instances.append(ExecsnoopInstance(instance))
 
     def to_json(self):

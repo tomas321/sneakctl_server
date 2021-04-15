@@ -1,9 +1,14 @@
 import sys
 from collections import namedtuple
+
+import dbus
+from dbus import Interface, SystemBus
+from json import dumps
 import os
 import psutil
 from psutil._common import addr, pconn
 from psutil._pslinux import pcputimes
+import re
 
 
 class ProcessAttributes:
@@ -72,13 +77,51 @@ ATTRIBUTES = {
 }
 
 
-def get_all_instances(pname: str, full: bool = False):
+def get_all_process_instances(pname: str, full: bool = False):
     pids = pgrep(pname)
     processes = []
     for pid in pids:
         processes.append(process_info(int(pid), full))
 
     return processes
+
+
+def get_all_systemd_units(service_name_regex: str = None):
+    bus = SystemBus()
+    systemd = bus.get_object(
+        'org.freedesktop.systemd1',
+        '/org/freedesktop/systemd1'
+    )
+
+    manager = Interface(
+        systemd,
+        'org.freedesktop.systemd1.Manager'
+    )
+
+    def map_values(unit_dbus_data) -> dict:
+        return {
+            'name': str(unit_dbus_data[0]).replace('.service', ''),
+            'description': str(unit_dbus_data[1]),
+            'load_state': str(unit_dbus_data[2]),
+            'active_state': str(unit_dbus_data[3]),
+            'sub_state': str(unit_dbus_data[4]),
+            'next_unit': str(unit_dbus_data[5]),
+            'unit_obj_path': str(unit_dbus_data[6]),
+            'queued_job_id': int(unit_dbus_data[7]),
+            'queued_job_type': str(unit_dbus_data[8]),
+            'queued_job_path': str(unit_dbus_data[9])
+        }
+
+    units_original = manager.ListUnits()
+    units = []
+    if not service_name_regex:
+        units = [map_values(unit) for unit in units_original]
+    else:
+        for unit in units_original:
+            if str(unit[0]).startswith(service_name_regex):
+                units.append(map_values(unit))
+
+    return units
 
 
 def pgrep(proc_pattern: str):

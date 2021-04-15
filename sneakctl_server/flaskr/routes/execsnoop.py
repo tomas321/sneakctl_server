@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 
 import sneakctl_server.core.execsnoop.execsnoop as execsnoop
-from sneakctl_server.core.utils import str_to_bool
+from sneakctl_server.core.utils import str_to_bool, get_all_systemd_units
 
 execsnoop_blueprint = Blueprint('execsnoop_blueprint', __name__, url_prefix='/execsnoop')
 
@@ -36,3 +36,16 @@ def load():
         rc = 201
 
     return {'response': 'OK'}, rc
+
+
+@execsnoop_blueprint.route('/services', methods=['GET'])
+def services():
+    """
+    Get all execsnoop systemd services, that are manageable by this server.
+
+    :return: list of services
+    """
+    units = get_all_systemd_units('execsnoop@')
+    return {
+        'response': units
+    }

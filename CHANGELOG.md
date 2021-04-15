@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- retrieve all execsnoop services
 
 ## [0.0.4]
 ### Modified

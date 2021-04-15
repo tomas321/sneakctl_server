@@ -2,3 +2,4 @@ pyyaml
 flask
 redis
 psutil
+dbus-python  # depends on 'libdbus-1-dev'
