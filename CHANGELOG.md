@@ -6,6 +6,7 @@
 - execsnoop/services/<name> for start/stop/restart operations
     - separate systemd management class
 
+- default route '/' to retrieve version and other future info
 - bug fixes
 
 ### Modified
