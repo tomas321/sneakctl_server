@@ -46,6 +46,7 @@ class Execsnoop:
         self.load_instances()
 
     def load_instances(self):
+        self.instances.clear()
         for instance in get_all_process_instances('execsnoop'):
             self.instances.add(ExecsnoopInstance(instance))
 

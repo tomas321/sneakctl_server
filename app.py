@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from json import dumps
 from sneakctl_server.flaskr.app import create_app
+
+
 app = create_app()
 
 
