@@ -26,7 +26,7 @@ def status():
     return status_response
 
 
-@execsnoop_blueprint.route('/services', methods=['GET', 'DELETE'])
+@execsnoop_blueprint.route('/services', methods=['GET'])
 def services():
     """
     Get all execsnoop systemd services, that are manageable by this server.
@@ -34,12 +34,6 @@ def services():
     :return: list of services
     """
     if request.method == 'GET':
-        units = interface.systemd_adapter.get_all_systemd_units('execsnoop@')
-        return {
-            'request': '/execsnoop/services',
-            'response': units
-        }
-    elif request.method == 'DELETE':
         units = interface.systemd_adapter.get_all_systemd_units('execsnoop@')
         return {
             'request': '/execsnoop/services',
