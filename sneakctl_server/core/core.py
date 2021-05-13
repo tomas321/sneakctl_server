@@ -1,4 +1,5 @@
 from sneakctl_server.core.execsnoop.execsnoop import Execsnoop
+from sneakctl_server.core.fswatch.fswatch import Fswatch
 from sneakctl_server.core.systemd import Systemd
 
 
@@ -12,6 +13,7 @@ class Main:
             self.__instance = self
         self.execsnoop_adapter = Execsnoop()
         self.systemd_adapter = Systemd()
+        self.fswatch_adapter = Fswatch()
 
 
 interface = Main()
