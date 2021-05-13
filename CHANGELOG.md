@@ -8,9 +8,12 @@
 
 - default route '/' to retrieve version and other future info
 - bug fixes
+- bulk request '/execsnoop/services/_all' to manage all services
 
 ### Modified
 - move main object adapters (execsnoop and systemd adapters) to a separate class/file
+- execsnoop service management
+- unified the API responses for execsnoop blueprint
 
 ### Removed
 - execsnoop/load api call and integrated it to the execsnoop/status api call

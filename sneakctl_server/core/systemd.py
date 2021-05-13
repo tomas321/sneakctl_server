@@ -13,45 +13,86 @@ class Systemd:
             systemd,
             'org.freedesktop.systemd1.Manager'
         )
-        self.operations = ['stop', 'start', 'restart']
+        self.supported_operations = ['stop', 'start', 'restart']
 
-    def run(self, operation: str, name: str):
-        rc = -1
-        msg = 'error'
-        if not name or operation.lower() not in self.operations:
-            return rc, msg
+    def run(self, operation: str, names):
+        """
+        Run a bulk request on a list of services.
 
-        if not name.endswith('.service'):
-            name = f'{name}.service'
+        :param operation: one of [stop, start, restart]
+        :param names: a single or a list of services
+        :return: tuple of (number of successful operations, status list)
+        """
+        if type(names) is not list:
+            names = [names]
+        if operation.lower() not in self.supported_operations:
+            return -1, f'error: unsupported action {operation.lower()}'
 
-        try:
+        status = []
+        count = 0
+        for name in names:
+            # msg = {'status': 'operation failed'}
+
+            if not name.endswith('.service'):
+                name = f'{name}.service'
+
             if operation.lower() == 'stop':
-                self.manager.StopUnit(name, 'replace')
-                msg = 'stopped'
+                rc, msg = self.stop(name)
             elif operation.lower() == 'start':
-                self.manager.StartUnit(name, 'replace')
-                msg = 'started'
+                rc, msg = self.start(name)
             elif operation.lower() == 'restart':
-                self.manager.TryRestartUnit(name, 'replace')
-                msg = 'restarted'
-            rc = 0
-        except DBusException as e:
-            rc = 1
-            msg = f'error: {str(e)}'
+                rc, msg = self.restart(name)
 
-        return rc, msg
+            if rc == 0:
+                count += 1
+
+            msg.update({'name': name})
+            print(msg)
+            status.append(msg)
+
+        return {'services': status, 'successful': count, 'failed': len(names) - count}
 
     def __list_units(self):
         return self.manager.ListUnits()
 
-    def start(self, name: str):
-        return self.run('start', name)
+    def start(self, name: str) -> (int, str):
+        """
+        Start the service.
 
-    def stop(self, name: str):
-        return self.run('stop', name)
+        :param name: service name (e.g. database.service)
+        :return: tuple of (return code, status message)
+        """
+        try:
+            self.manager.StartUnit(name, 'replace')
+            return 0, {'status': 'started'}
+        except DBusException as e:
+            return 1, {'error': str(e)}
 
-    def restart(self, name: str):
-        return self.run('restart', name)
+    def stop(self, name: str) -> (int, str):
+        """
+        Stop the service.
+
+        :param name: service name (e.g. database.service)
+        :return: tuple of (return code, status message)
+        """
+        try:
+            self.manager.StopUnit(name, 'replace')
+            return 0, {'status': 'stopped'}
+        except DBusException as e:
+            return 1, {'error': str(e)}
+
+    def restart(self, name: str) -> (int, str):
+        """
+        Try to restart the service.
+
+        :param name: service name (e.g. database.service)
+        :return: tuple of (return code, status message)
+        """
+        try:
+            self.manager.TryRestartUnit(name, 'replace')
+            return 0, {'status': 'restarted'}
+        except DBusException as e:
+            return 1, {'error': str(e)}
 
     def get_all_systemd_units(self, service_name_regex: str = None):
         def map_values(unit_dbus_data) -> dict:
