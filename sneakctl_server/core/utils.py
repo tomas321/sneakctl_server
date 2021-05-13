@@ -1,5 +1,6 @@
 import sys
 from collections import namedtuple
+
 import os
 import psutil
 from psutil._common import addr, pconn
@@ -72,7 +73,7 @@ ATTRIBUTES = {
 }
 
 
-def get_all_instances(pname: str, full: bool = False):
+def get_all_process_instances(pname: str, full: bool = False):
     pids = pgrep(pname)
     processes = []
     for pid in pids:

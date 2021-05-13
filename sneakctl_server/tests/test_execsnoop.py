@@ -40,15 +40,16 @@ for i in range(len(execsnoop_dicts)):
 class MyTestCase(unittest.TestCase):
     def __test_execsnoop_obj_has_all_attributes(self, index):
         i = index
-        with patch('sneakctl_server.core.execsnoop.execsnoop.get_all_instances', return_value=[execsnoop_dicts[i]]):
+        with patch('sneakctl_server.core.execsnoop.execsnoop.get_all_process_instances', return_value=[execsnoop_dicts[i]]):
             execsnoop = Execsnoop()
+            execsnoop_test_instance = execsnoop.instances.pop()
             for k, v in expected_execsnoop_instances[i].items():
-                self.assertEqual(getattr(execsnoop.instances[0], k), v)
+                self.assertEqual(getattr(execsnoop_test_instance, k), v)
 
-            self.assertEqual(execsnoop.instances[0].options,
+            self.assertEqual(execsnoop_test_instance.options,
                              expected_execsnoop_instances[i]['cmdline'].split('execsnoop')[1].strip())
 
-            return execsnoop.instances[0]
+            return execsnoop_test_instance
 
     def test_execsnoop_obj0_has_all_attributes(self):
         execsnoop_instance = self.__test_execsnoop_obj_has_all_attributes(0)

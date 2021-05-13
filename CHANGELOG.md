@@ -1,6 +1,22 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- retrieve all execsnoop services
+- execsnoop/services/<name> for start/stop/restart operations
+    - separate systemd management class
+
+- default route '/' to retrieve version and other future info
+- bug fixes
+- bulk request '/execsnoop/services/_all' to manage all services
+
+### Modified
+- move main object adapters (execsnoop and systemd adapters) to a separate class/file
+- execsnoop service management
+- unified the API responses for execsnoop blueprint
+
+### Removed
+- execsnoop/load api call and integrated it to the execsnoop/status api call
 
 ## [0.0.4]
 ### Modified
@@ -41,4 +57,3 @@
 [0.0.3]: https://github.com/tomas321/sneakctl_server/compare/0.0.2...0.0.3
 [0.0.2]: https://github.com/tomas321/sneakctl_server/compare/0.0.1...0.0.2
 [0.0.1]: https://github.com/tomas321/sneakctl_server/releases/tag/0.0.1
-
