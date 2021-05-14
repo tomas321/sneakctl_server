@@ -11,6 +11,7 @@
 - bulk request '/execsnoop/services/_all' to manage all services
 - fswatch API endpoints same as for execsnoop
 - reset-failed systemd service after each operation execution
+- file stats API
 
 ### Modified
 - move main object adapters (execsnoop and systemd adapters) to a separate class/file

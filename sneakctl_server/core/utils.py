@@ -1,10 +1,10 @@
-import sys
 from collections import namedtuple
-
+from datetime import datetime
 import os
 import psutil
 from psutil._common import addr, pconn
 from psutil._pslinux import pcputimes
+import pwd, grp
 
 
 class ProcessAttributes:
@@ -105,3 +105,39 @@ def str_to_bool(s: str):
     elif s.lower() in ['false', '0', 'f', 'n', 'no']:
         return False
     return None
+
+
+def get_os_stats_dict(fname):
+    file_stats = os.stat(fname)
+    return {x: getattr(file_stats, x) for x in dir(file_stats) if x.startswith('st_')}
+
+
+def get_file_stats(filename:  str):
+    conversion_mapping = {
+        "st_atime": lambda x: datetime.fromtimestamp(x).strftime('%Y-%m-%d %H:%M:%S'),
+        "st_atime_ns": lambda x: datetime.fromtimestamp(x/10**9).strftime('%Y-%m-%d %H:%M:%S.%f'),
+        "st_blksize": lambda x: int(x),
+        "st_blocks": lambda x: int(x),
+        "st_ctime": lambda x: datetime.fromtimestamp(x).strftime('%Y-%m-%d %H:%M:%S'),
+        "st_ctime_ns": lambda x: datetime.fromtimestamp(x/10**9).strftime('%Y-%m-%d %H:%M:%S.%f'),
+        "st_dev": lambda x: int(x),
+        "st_gid": lambda x: grp.getgrgid(x).gr_name,
+        "st_ino": lambda x: int(x),
+        "st_mode": lambda x: str(oct(x))[2:],
+        "st_mtime": lambda x: datetime.fromtimestamp(x).strftime('%Y-%m-%d %H:%M:%S'),
+        "st_mtime_ns": lambda x: datetime.fromtimestamp(x/10**9).strftime('%Y-%m-%d %H:%M:%S.%f'),
+        "st_nlink": lambda x: int(x),
+        "st_rdev": lambda x: int(x),
+        "st_size": lambda x: int(x),
+        "st_uid": lambda x: pwd.getpwuid(x).pw_name
+    }
+    try:
+        file_stats_dict = get_os_stats_dict(filename)
+        parsed_dict = {}
+        from sys import stderr
+        for k, v in file_stats_dict.items():
+            parsed_dict[k] = conversion_mapping[k](v)
+
+        return 0, {'stats': parsed_dict, 'filename': filename}
+    except FileNotFoundError as e:
+        return 1, {'error': str(e)}
