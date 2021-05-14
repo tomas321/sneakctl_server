@@ -48,7 +48,6 @@ class Systemd:
 
             msg.update({'name': name})
             status.append(msg)
-            print(msg)
             self.manager.ResetFailed()  # resets the "failed" state of all units... kind of a flush
 
         return {'services': status, 'successful': count, 'failed': len(names) - count}
