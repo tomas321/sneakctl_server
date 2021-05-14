@@ -42,7 +42,7 @@ class ProcessAttributes:
                 raddr = dict(addr(*conn[4])._asdict())
 
             connection_dict = dict(pconn(conn[0], conn[1], conn[2], laddr, raddr, conn[5])._asdict())
-            print(connection_dict, file=sys.stderr)
+            # print(connection_dict, file=sys.stderr)
 
             connections.append(connection_dict)
             

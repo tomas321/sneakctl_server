@@ -9,6 +9,8 @@
 - default route '/' to retrieve version and other future info
 - bug fixes
 - bulk request '/execsnoop/services/_all' to manage all services
+- fswatch API endpoints same as for execsnoop
+- reset-failed systemd service after each operation execution
 
 ### Modified
 - move main object adapters (execsnoop and systemd adapters) to a separate class/file

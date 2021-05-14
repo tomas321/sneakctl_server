@@ -1,5 +1,6 @@
 from flask import Flask
 
+from sneakctl_server.flaskr.routes.fswatch import fswatch_blueprint
 from sneakctl_server.flaskr.routes.process import process_blueprint
 from sneakctl_server.flaskr.settings import prod as prod_cfg, dev as dev_cfg
 from sneakctl_server.flaskr import db
@@ -28,6 +29,7 @@ def create_app():
     app.register_blueprint(db_blueprint)
     app.register_blueprint(execsnoop_blueprint)
     app.register_blueprint(process_blueprint)
+    app.register_blueprint(fswatch_blueprint)
 
     db.init_app(app)
 
