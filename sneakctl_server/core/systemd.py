@@ -48,11 +48,11 @@ class Systemd:
 
             msg.update({'name': name})
             status.append(msg)
-            self.manager.ResetFailed()  # resets the "failed" state of all units... kind of a flush
 
         return {'services': status, 'successful': count, 'failed': len(names) - count}
 
     def __list_units(self):
+        self.manager.ResetFailed()  # resets the "failed" state of all units... kind of a flush
         return self.manager.ListUnits()
 
     def start(self, name: str) -> (int, str):
@@ -76,7 +76,8 @@ class Systemd:
         :return: tuple of (return code, status message)
         """
         try:
-            self.manager.StopUnit(name, 'replace')
+            self.manager.KillUnit(name, 'all', 9)
+            self.manager.ResetFailedUnit(name)  # resets the "failed" state of all units... kind of a flush
             return 0, {'status': 'stopped'}
         except DBusException as e:
             return 1, {'error': str(e)}
@@ -89,8 +90,12 @@ class Systemd:
         :return: tuple of (return code, status message)
         """
         try:
-            self.manager.TryRestartUnit(name, 'replace')
-            return 0, {'status': 'restarted'}
+            rc_stop, msg_stop = self.stop(name)
+            rc_start, msg_start = self.start(name)
+            if rc_stop + rc_start == 0:
+                return 0, {'status': 'restarted'}
+            else:
+                raise DBusException('failed to restart service')
         except DBusException as e:
             return 1, {'error': str(e)}
 
