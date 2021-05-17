@@ -1,6 +1,9 @@
 # Changelog
 
 ## [Unreleased]
+_
+
+## [0.1.0]
 ### Added
 - retrieve all execsnoop services
 - execsnoop/services/<name> for start/stop/restart operations
@@ -55,7 +58,8 @@
 
 - serialize all existing execsnoop instances
 
-[Unreleased]: https://github.com/tomas321/sneakctl_server/compare/0.0.4...develop
+[Unreleased]: https://github.com/tomas321/sneakctl_server/compare/0.1.0...develop
+[0.1.0]: https://github.com/tomas321/sneakctl_server/compare/0.0.4...0.1.0
 [0.0.4]: https://github.com/tomas321/sneakctl_server/compare/0.0.3...0.0.4
 [0.0.3]: https://github.com/tomas321/sneakctl_server/compare/0.0.2...0.0.3
 [0.0.2]: https://github.com/tomas321/sneakctl_server/compare/0.0.1...0.0.2
