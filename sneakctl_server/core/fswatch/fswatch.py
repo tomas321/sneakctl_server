@@ -1,10 +1,10 @@
 from datetime import datetime
 
 from sneakctl_server.core.utils import get_all_process_instances
-from sneakctl_server.core.execsnoop.cmd import execsnoop_options
+from sneakctl_server.core.fswatch.cmd import fswatch_options
 
 
-class ExecsnoopInstance:
+class FswatchInstance:
     def __init__(self, process: dict):
         """
 
@@ -18,13 +18,13 @@ class ExecsnoopInstance:
             else:
                 setattr(self, k, v)
 
-        self.options = self.cmdline.split('execsnoop')[1].strip()
-        for option, meta in execsnoop_options.items():
+        self.options = self.cmdline.split('fswatch')[1].strip()
+        for option, meta in fswatch_options.items():
             self.__set_option(option, meta)
 
     def __set_option(self, option_name: str, option_meta: dict):
         # TODO: rather loop through the cmdline and match the found options to the specified known args
-        option_name = 'execsnoop_' + option_name
+        option_name = 'fswatch_' + option_name
         for arg in option_meta['variations']:
             if arg in self.options:
                 if option_meta['has_arg']:
@@ -40,15 +40,15 @@ class ExecsnoopInstance:
         return json_attrs
 
 
-class Execsnoop:
+class Fswatch:
     def __init__(self):
         self.instances = set()
         self.load_instances()
 
     def load_instances(self):
         self.instances.clear()
-        for instance in get_all_process_instances('execsnoop'):
-            self.instances.add(ExecsnoopInstance(instance))
+        for instance in get_all_process_instances('fswatch'):
+            self.instances.add(FswatchInstance(instance))
 
     def to_json(self):
         json_instances = []
@@ -58,4 +58,4 @@ class Execsnoop:
         return json_instances
 
 
-execsnoop_adapter = None
+fswatch_adapter = None

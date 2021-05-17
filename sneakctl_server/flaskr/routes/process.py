@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 
-from sneakctl_server.core.utils import get_all_instances, process_info
+from sneakctl_server.core.utils import get_all_process_instances, process_info
 from sneakctl_server.core.utils import str_to_bool
 
 process_blueprint = Blueprint('process_blueprint', __name__, url_prefix='/process')
@@ -24,7 +24,7 @@ def process_status(proc):
         proc = int(proc)
         status_response['response']['process_instances'] = process_info(proc, full_status)
     except ValueError:
-        status_response['response']['process_instances'] = get_all_instances(proc, full_status)
+        status_response['response']['process_instances'] = get_all_process_instances(proc, full_status)
     status_response['count'] = len(status_response['response']['process_instances'])
 
     return status_response

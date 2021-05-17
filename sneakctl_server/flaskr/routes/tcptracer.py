@@ -4,52 +4,52 @@ from werkzeug.exceptions import BadRequest, BadRequestKeyError
 from sneakctl_server.core.utils import str_to_bool
 from sneakctl_server.core.core import interface
 
-execsnoop_blueprint = Blueprint('execsnoop_blueprint', __name__, url_prefix='/execsnoop')
+tcptracer_blueprint = Blueprint('tcptracer_blueprint', __name__, url_prefix='/tcptracer')
 
 
-@execsnoop_blueprint.route('/status', methods=['GET'])
+@tcptracer_blueprint.route('/status', methods=['GET'])
 def status():
     """
-    Get status on all execsnoop processes. Use URL parameter 'reload' to reload the instances and get the current
+    Get status on all tcptracer processes. Use URL parameter 'reload' to reload the instances and get the current
     status. It defaults to true.
 
     :return: list of process_info dicts
     """
     status_response = {'response': {}}
     if str_to_bool(request.args.get('reload', default='true')):
-        interface.execsnoop_adapter.load_instances()
+        interface.tcptracer_adapter.load_instances()
 
-    status_response['request'] = '/execsnoop/status'
-    status_response['response']['process_instances'] = interface.execsnoop_adapter.to_json()
+    status_response['request'] = '/tcptracer/status'
+    status_response['response']['process_instances'] = interface.tcptracer_adapter.to_json()
     status_response['response']['count'] = len(status_response['response']['process_instances'])
 
     return status_response
 
 
-@execsnoop_blueprint.route('/services', methods=['GET'])
+@tcptracer_blueprint.route('/services', methods=['GET'])
 def services():
     """
-    Get all execsnoop systemd services, that are manageable by this server.
+    Get all tcptracer systemd services, that are manageable by this server.
 
     :return: list of services
     """
     if request.method == 'GET':
-        units = interface.systemd_adapter.get_all_systemd_units('execsnoop@')
+        units = interface.systemd_adapter.get_all_systemd_units('tcptracer@')
         return {
-            'request': '/execsnoop/services',
+            'request': '/tcptracer/services',
             'response': units
         }
 
 
-@execsnoop_blueprint.route('/services/<name>', methods=['GET', 'POST'])
+@tcptracer_blueprint.route('/services/<name>', methods=['GET', 'POST'])
 def services_modify(name):
     """
-    Get, stop or restart an execsnoop service by name or all (<name> == '_all')
+    Get, stop or restart an tcptracer service by name or all (<name> == '_all')
 
     json body:
     { "action": on of ["start", "stop", "restart"] }
 
-    :param name: execsnoop service name or '_all' for addressing all execsnoop services
+    :param name: tcptracer service name or '_all' for addressing all tcptracer services
     :return: status of changes made or requested service info
     """
     ALL_SERVICES = '_all'
@@ -57,7 +57,7 @@ def services_modify(name):
     DEFAULT_STATUS_CODE = 200
 
     contents = {}
-    response = {'request': f'/execsnoop/services/{name}'}
+    response = {'request': f'/tcptracer/services/{name}'}
     msg = {}
     status_code = DEFAULT_STATUS_CODE
 
@@ -83,12 +83,12 @@ def services_modify(name):
         return {}, 400
 
     if status_code == DEFAULT_STATUS_CODE:
-        units = interface.systemd_adapter.get_all_systemd_units('execsnoop@')
+        units = interface.systemd_adapter.get_all_systemd_units('tcptracer@')
         if request.method == 'GET':
             # resolve the GET request and return a single service
             if name == ALL_SERVICES:
                 # ALL_SERVICES is allowed only for POST method
-                msg = {'message': "info: use the designated API endpoint '/execsnoop/services' or use POST"}
+                msg = {'message': "info: use the designated API endpoint '/tcptracer/services' or use POST"}
             else:
                 found_service = [unit for unit in units if unit['name'] == name]
                 if len(found_service) > 0:

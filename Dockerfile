@@ -5,6 +5,9 @@ WORKDIR $PROJECT_DIR
 
 COPY . $PROJECT_DIR
 
-RUN pip3 install -r requirements.txt
+RUN apt update &&\
+    apt upgrade -y &&\
+    apt install -y libdbus-1-dev &&\
+    pip3 install -r requirements.txt
 
 ENTRYPOINT ["./docker/docker-entrypoint.sh"]
